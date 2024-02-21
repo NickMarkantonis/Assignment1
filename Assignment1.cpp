@@ -160,7 +160,7 @@ int main()
         {
             for (int j = 0; j < w/2; j++)
             {
-                color pixel_color = color(, , );
+                color pixel_color = color(r, g, b);
                 write_color(fout, pixel_color);
 
                 r1 += rdis1;
