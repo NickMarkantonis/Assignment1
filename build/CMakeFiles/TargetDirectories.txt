@@ -1,0 +1,4 @@
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/build/CMakeFiles/assignment1.dir
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/build/CMakeFiles/example.dir
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/build/CMakeFiles/ZERO_CHECK.dir

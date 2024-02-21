@@ -1,0 +1,4 @@
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/out/build/x64-Debug/CMakeFiles/assignment1.dir
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/out/build/x64-Debug/CMakeFiles/example.dir
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

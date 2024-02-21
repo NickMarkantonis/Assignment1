@@ -1,0 +1,10 @@
+^C:\USERS\MARKA\DOCUMENTS\CSD\2ND_SEMMESTER\ΠΡΟΓΡΑΜΜΑΤΙΣΜΌς\ΑΣΚΉΣΕΙς\ASSIGNMENT1\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1 -BC:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/build --check-stamp-file C:/Users/marka/Documents/csd/2nd_semmester/Προγραμματισμός/ασκήσεις/Assignment1/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
