@@ -16,23 +16,25 @@ The program works this way:
    transition from inside out.
 */
 
+// how many different types of images the program can currently generate and how many of each type
+#define totalImages 2
+#define gradientTypes 3
+#define patternTypes 1
+
 #include "std_lib_facilities.h"
 #include "vec3.h"
 #include "color.h"
 #include <fstream> // For file I/O
 #include <iostream>
 
-// WrongInput: a class to be used as an exception
-class WrongInput {};
+class WrongInput{ };
 
+int checkInputInt(string inp, int option);
 int isInteger(string input, int option);
-int checkInputInt(string input, int option);
-float isFloat(string input);
-float checkInputFloat(string input);
+float checkInputFloat(string input, int option);
+float isFloat(string input, int option);
 
-// errorNum: saves what error has appeared in the code
-// errorNum == 0: there is no error
-int errorNum = 0;
+int errNo;
 
 int main() 
 {
@@ -44,52 +46,66 @@ int main()
     // pixel_color: the pixel color of each different pixel
     string name, inp;
     float r, g, b;
-    int w = 0, h = 0, inType;
+    int w = 0, h = 0, inType1, inType2, count = 0, pos = 0, totalPixels;
     float color1[3], color2[3];
     float rdis, gdis, bdis;
     color pixel_color;
 
     // menu
-    // added the braces during production to be able to retract the code for the menu and make it more readable
+    cout << "Image Generator - CSD5449\n\n";
+    
+    cout << "Give image name, no need to add the .ppm at the end: ";
+    cin >> name;
+
+    cout << "Give image width: ";
+    cin >> inp;
+    w = checkInputInt(inp, 0);
+
+    cout << "Give image height: ";
+    cin >> inp;
+    h = checkInputInt(inp, 0);
+    totalPixels = w * h / 100;
+
+    cout << "Select Image type: \n\t1. Gradient \n\t2. Geometric Pattern\n";
+    cin >> inp;
+    inType2 = checkInputInt(inp, totalImages);
+    
+    if (inType2 == 1)
     {
-        cout << "Image Generator - CSD5449\n\n";
-        
-        cout << "Give image name (no need to add .ppm at the end): ";
-        cin >> name;
-
-        cout << "Give image height: ";
+        cout << "Select Gradient descending: \n\t1. left->right \n\t2. top -> bottom \n\t3. middle -> out\n";
         cin >> inp;
-        h = checkInputInt(inp, 0);
-        cout << "Give image width: ";
-        cin >> inp;
-        w = checkInputInt(inp, 0);
-
-        cout << "What image do you want to generate: \n\t1. left -> right\n\t2. top -> bottom\n\t3. middle -> out\n";
-        cin >> inp;
-        inType = checkInputInt(inp, 1);
-
-        cout << "Give RGB values for starting color\n";
-        cout << "Red: ";
-        cin >> inp;
-        color1[0] = checkInputFloat(inp);
-        cout << "Green: ";
-        cin >> inp;
-        color1[1] = checkInputFloat(inp);
-        cout << "Blue: ";
-        cin >> inp;
-        color1[2] = checkInputFloat(inp);
-
-        cout << "Give RGB values for ending color\n";
-        cout << "Red: ";
-        cin >> inp;
-        color2[0] = checkInputFloat(inp);
-        cout << "Green: ";
-        cin >> inp;
-        color2[1] = checkInputFloat(inp);
-        cout << "Blue: ";
-        cin >> inp;
-        color2[2] = checkInputFloat(inp);
+        inType1 = checkInputInt(inp, gradientTypes);
     }
+    else if (inType2 == 2)
+    {
+        cout << "Select geometric pattern: \n\t1. Sine Wave";
+        cin >> inp;
+        inType1 = checkInputInt(inp, patternTypes);
+    }
+
+    cout << "Select colour 1: \n";
+    cout << "Red [0-1]: ";
+    cin >> inp;
+    color1[0] = checkInputFloat(inp, 1);
+    cout << "Green [0-1]: ";
+    cin >> inp;
+    color1[1] = checkInputFloat(inp, 1);
+    cout << "Blue [0-1]: ";
+    cin >> inp;
+    color1[2] = checkInputFloat(inp, 1);
+
+    cout << "Select colour 2: \n";
+    cout << "Red [0-1]: ";
+    cin >> inp;
+    color2[0] = checkInputFloat(inp, 1);
+    cout << "Green [0-1]: ";
+    cin >> inp;
+    color2[1] = checkInputFloat(inp, 1);
+    cout << "Blue [0-1]: ";
+    cin >> inp;
+    color2[2] = checkInputFloat(inp, 1);
+
+    cout << "\n--------------------------------------------------------------------------------------\n\n";
     
     // creating the image
     fstream fout;
@@ -104,7 +120,7 @@ int main()
     g = color1[1];
     b = color1[2];
 
-    if (inType == 1) // left to right fade
+    if (inType1 == 1) // left to right fade
     {
         rdis /= w;
         gdis /= w;
@@ -120,6 +136,14 @@ int main()
                 r += rdis;
                 g += gdis;
                 b += bdis;
+
+                pos++;
+                if (pos == totalPixels) {
+                    count++;
+                    cout << "Generatting " << count << "%\n";
+                    pos = 0;  
+                }
+
             }
 
             // reseting the colours
@@ -129,7 +153,7 @@ int main()
 
         }
     }
-    else if (inType == 2) // from top to bottom
+    else if (inType1 == 2) // from top to bottom
     {
         rdis /= h;
         gdis /= h;
@@ -141,12 +165,19 @@ int main()
             {
                 color pixel_color = color(r, g, b);
                 write_color(fout, pixel_color);
+
+                pos++;
+                if (pos == totalPixels) {
+                    count++;                    
+                    cout << "Generatting " << count << "%\n";
+                    pos = 0; 
+                }
+
             }
             
             r += rdis;
             g += gdis;
             b += bdis;
-
         }
     }
     else // from middle to out
@@ -177,9 +208,18 @@ int main()
 
                 color pixel_color = color(r, g, b);
                 write_color(fout, pixel_color);
+
+                pos++;
+                if (pos == totalPixels) {
+                    count++;                    
+                    cout << "Generatting " << count << "%\n";
+                    pos = 0; 
+                }
             }
         }
     }
+
+    cout << "Generating Done!\n";
 
     // closing the image
     fout.close();
@@ -210,7 +250,7 @@ int isInteger(string input, int option)
             throw WrongInput();
             return 0;
         }
-        if (option && num > 3) 
+        if (option && num > option)
         {
             errno = 3;
             throw WrongInput();
@@ -221,34 +261,6 @@ int isInteger(string input, int option)
         errno = 2;
         throw WrongInput();
         return 0;
-    }
-
-    return num;
-}
-
-/* Same as in isInteger(string input) but for floats
-Checking if string is number: user Ben Voigt stackoverflow (https://stackoverflow.com/a/16575025)*/
-float isFloat(string input)
-{
-    char* p;
-    float num;
-
-    strtol(input.c_str(), &p, 10);
-    if (*p == 0) // if it is a integer
-    {
-        num = stof(input);
-        if (num < 0 || num > 1)
-        {
-            errno = 1;
-            throw WrongInput();
-            return -1;
-        }
-    }
-    else // if  it isn't
-    {
-        errno = 2;
-        throw WrongInput();
-        return -1;
     }
 
     return num;
@@ -270,7 +282,7 @@ int checkInputInt(string input, int option)
         {
             if (errno == 1) cout << "Number must be possitive integer, please try again: ";
             else if (errno == 2) cout << "Input must be integer, please try again: ";
-            else if (errno == 3) cout << "Option must be between 1 and 3: ";
+            else if (errno == 3) cout << "Option must be between 1 and " << option << ": ";
             cin >> input;
             // resseting the error
             errno = 0;
@@ -280,19 +292,57 @@ int checkInputInt(string input, int option)
     return inp;
 }
 
-/* Same as in checkInputInt(string input) but for floats */
-float checkInputFloat(string input)
+
+/* Same as the adequate isInteger but for floats 
+Checking if string is float: user Bill the Lizzard stackoverflow (https://stackoverflow.com/a/447307)*/
+float isFloat(string input, int option)
+{
+    bool isfloat;
+
+    istringstream iss(input);
+    float f;
+    iss >> noskipws >> f;
+    isfloat = iss.eof() && !iss.fail();
+
+    // check if string is float
+    if (isfloat) // if it is a float
+    {
+        if (f < 0)
+        {
+            errno = 1;
+            throw WrongInput();
+            return 0;
+        }
+        if (option && f > option)
+        {
+            errno = 3;
+            throw WrongInput();
+            return 0;
+        }
+    } else // if  it isn't
+    {
+        errno = 2;
+        throw WrongInput();
+        return 0;
+    }
+
+    return f;
+}
+
+/* Same as checkInputInt but for floats */
+float checkInputFloat(string input, int option)
 {
     float inp = -1;
     while (inp == -1)
     {
         try {
-            inp = isFloat(input);
+            inp = isFloat(input, option);
         }
         catch (WrongInput& b)
         {
-            if (errno == 1) cout << "Number must be between 0 and 1, please try again: ";
-            else cout << "Input must be number, please try again: ";
+            if (errno == 1) cout << "Number must be possitive float, please try again: ";
+            else if (errno == 2) cout << "Input must be float, please try again: ";
+            else if (errno == 3) cout << "Option must be between 0 and " << option << ": ";
             cin >> input;
             // resseting the error
             errno = 0;
