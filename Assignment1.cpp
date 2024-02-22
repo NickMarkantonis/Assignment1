@@ -6,6 +6,16 @@
  * @author: CSD5449
  */
 
+/*
+The program works this way:
+ - To generate a image from left to right and from to to bottom we start by calculating the gradient in which the two image are,
+   in each loop then we raise the RGB value by the gradient in order to get a smooth transition as the RGb value of each pixel gradually 
+   changes from the statring colour to the end colour.
+ - To generate a image from inside out we start of by calculating the distance each pixel has from the center of the sphere, we then do
+   the adequate operations based on how far away each pixel is with the intencity of the start and end colour to end up with a smooth
+   transition from inside out.
+*/
+
 #include "std_lib_facilities.h"
 #include "vec3.h"
 #include "color.h"
