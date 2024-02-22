@@ -141,7 +141,34 @@ int main()
     }
     else // from middle to out
     {
-        
+        float dist;
+        int min;
+
+        // finding if the height is smaller or the width
+        min = w;
+        if (h < w) min = h;
+
+        color1[0] /= 2;
+        color1[1] /= 2;
+        color1[2] /= 2;
+
+        color2[0] /= 2;
+        color2[1] /= 2;
+        color2[2] /= 2;
+
+        for (int i = 0; i < h; i++)
+        {
+            for (int j = 0; j < w; j++)
+            {
+                dist = sqrt((i-h/2) * (i - h/2) + (j - w/2) * (j - w/2));
+                r = (dist/(min-dist)) * color1[0] + ((min-dist)/(min)) * color2[0];
+                g = (dist/(min-dist)) * color1[1] + ((min-dist)/(min)) * color2[1];
+                b = (dist/(min-dist)) * color1[2] + ((min-dist)/(min)) * color2[2];
+
+                color pixel_color = color(r, g, b);
+                write_color(fout, pixel_color);
+            }
+        }
     }
 
     // closing the image
