@@ -78,7 +78,7 @@ int main()
     }
     else if (inType2 == 2)
     {
-        cout << "Select geometric pattern: \n\t1. Sine Wave";
+        cout << "Select geometric pattern: \n\t1. Sine Wave\n";
         cin >> inp;
         inType1 = checkInputInt(inp, patternTypes);
     }
@@ -94,6 +94,8 @@ int main()
     cin >> inp;
     color1[2] = checkInputFloat(inp, 1);
 
+
+
     cout << "Select colour 2: \n";
     cout << "Red [0-1]: ";
     cin >> inp;
@@ -104,7 +106,6 @@ int main()
     cout << "Blue [0-1]: ";
     cin >> inp;
     color2[2] = checkInputFloat(inp, 1);
-
     cout << "\n--------------------------------------------------------------------------------------\n\n";
     
     // creating the image
@@ -120,67 +121,68 @@ int main()
     g = color1[1];
     b = color1[2];
 
-    if (inType1 == 1) // left to right fade
-    {
-        rdis /= w;
-        gdis /= w;
-        bdis /= w;
-
-        for (int i = 0; i < h; i++)
+    if (inType2 == 1) { // gradient
+        if (inType1 == 1) // left to right fade
         {
-            for (int j = 0; j < w; j++)
+            rdis /= w;
+            gdis /= w;
+            bdis /= w;
+
+            for (int i = 0; i < h; i++)
             {
-                color pixel_color = color(r, g, b);
-                write_color(fout, pixel_color);
+                for (int j = 0; j < w; j++)
+                {
+                    color pixel_color = color(r, g, b);
+                    write_color(fout, pixel_color);
+
+                    r += rdis;
+                    g += gdis;
+                    b += bdis;
+
+                    pos++;
+                    if (pos == totalPixels) {
+                        count++;
+                        cout << "Generatting " << count << "%\n";
+                        pos = 0;  
+                    }
+
+                }
+
+                // reseting the colours
+                r = color1[0];
+                g = color1[1];
+                b = color1[2];
+
+            }
+        }
+        else if (inType1 == 2) // from top to bottom
+        {
+            rdis /= h;
+            gdis /= h;
+            bdis /= h;
+
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    color pixel_color = color(r, g, b);
+                    write_color(fout, pixel_color);
+
+                    pos++;
+                    if (pos == totalPixels) {
+                        count++;                    
+                        cout << "Generatting " << count << "%\n";
+                        pos = 0; 
+                    }
+
+                }
 
                 r += rdis;
                 g += gdis;
                 b += bdis;
-
-                pos++;
-                if (pos == totalPixels) {
-                    count++;
-                    cout << "Generatting " << count << "%\n";
-                    pos = 0;  
-                }
-
             }
-
-            // reseting the colours
-            r = color1[0];
-            g = color1[1];
-            b = color1[2];
-
         }
-    }
-    else if (inType1 == 2) // from top to bottom
-    {
-        rdis /= h;
-        gdis /= h;
-        bdis /= h;
-
-        for (int i = 0; i < h; i++)
-        {
-            for (int j = 0; j < w; j++)
-            {
-                color pixel_color = color(r, g, b);
-                write_color(fout, pixel_color);
-
-                pos++;
-                if (pos == totalPixels) {
-                    count++;                    
-                    cout << "Generatting " << count << "%\n";
-                    pos = 0; 
-                }
-
-            }
-            
-            r += rdis;
-            g += gdis;
-            b += bdis;
-        }
-    }
-    else // from middle to out
+        else // from middle to out
     {
         float dist;
         int min;
@@ -203,8 +205,16 @@ int main()
             {
                 dist = sqrt((i-h/2) * (i - h/2) + (j - w/2) * (j - w/2));
                 r = (dist/(min-dist)) * color1[0] + ((min-dist)/(min)) * color2[0];
+                if (r > 1) r = 1;
+                else if (r < 0) r = 0;
+
                 g = (dist/(min-dist)) * color1[1] + ((min-dist)/(min)) * color2[1];
+                if (g > 1) g = 1;
+                else if (g < 0) g = 0;
+
                 b = (dist/(min-dist)) * color1[2] + ((min-dist)/(min)) * color2[2];
+                if (b > 1) b = 1;
+                else if (b < 0) b = 0;
 
                 color pixel_color = color(r, g, b);
                 write_color(fout, pixel_color);
@@ -214,6 +224,35 @@ int main()
                     count++;                    
                     cout << "Generatting " << count << "%\n";
                     pos = 0; 
+                }
+            }
+        }
+    }
+    }
+    else if (inType2 == 2) // making geometric shape
+    {
+        if (inType1 == 1) // sin wave
+        {
+            double LineWidth = 5.0/h, xNorm, yNorm;
+            for (int x = 0; x < h; x++)
+            {
+                for (int y = 0; y < w; y++)
+                {
+                    xNorm = ( (double) y / (h-1)) - 0.5;
+                    yNorm = ( (double) x / (h-1)) - 0.5;
+
+                    if ( abs( yNorm - 0.4 * sin( xNorm / 0.1 ) ) < LineWidth )
+                        pixel_color = color( color1[0], color1[1], color1[2] );
+                    else 
+                        pixel_color = color( color2[0], color2[1], color2[2] );
+                    write_color(fout, pixel_color);
+
+                    pos++;
+                    if (pos == totalPixels) {
+                        count++;                    
+                        cout << "Generatting " << count << "%\n";
+                        pos = 0; 
+                    }                    
                 }
             }
         }
