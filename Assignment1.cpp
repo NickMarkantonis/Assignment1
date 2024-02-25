@@ -233,15 +233,16 @@ int main()
     {
         if (inType1 == 1) // sin wave
         {
-            double LineWidth = 5.0/h, xNorm, yNorm;
+            double LineWidth = 5.0/h, xNorm, yNorm, since;
             for (int x = 0; x < h; x++)
             {
+                xNorm = ( (double) y / (h-1)) - 0.5;
+                sine = 0.4 * sin( xNorm / 0.1 );
                 for (int y = 0; y < w; y++)
-                {
-                    xNorm = ( (double) y / (h-1)) - 0.5;
+                {
                     yNorm = ( (double) x / (h-1)) - 0.5;
 
-                    if ( abs( yNorm - 0.4 * sin( xNorm / 0.1 ) ) < LineWidth )
+                    if ( abs( yNorm - sine) < LineWidth )
                         pixel_color = color( color1[0], color1[1], color1[2] );
                     else 
                         pixel_color = color( color2[0], color2[1], color2[2] );
